@@ -5,8 +5,7 @@ export type BottomTabParamList = {
 };
 
 export type AuthStackParamList = {
-  LoginEmail: undefined;
-  LoginPassword: undefined;
+  Login: undefined;
   RecoverPassword: undefined;
   VerifyCode: undefined;
   SetPassword: undefined;
