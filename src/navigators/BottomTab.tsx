@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import {
   BottomTabBarProps,
   BottomTabNavigationOptions,
@@ -6,7 +6,6 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { BottomTabParamList } from './type';
 import { ExploreScreen, HomeScreen, LibraryScreen } from '@/screens';
-import { RouteProp } from '@react-navigation/native';
 import { useAppTheme } from '@/hooks';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Feather, Ionicons } from '@/components/icons';
@@ -21,10 +20,12 @@ const CustomTabBar = ({
   const { colors } = useAppTheme();
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: colors.black,
-      }}>
+      style={[
+        {
+          backgroundColor: colors.black,
+        },
+        styles.tabBar,
+      ]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -107,6 +108,9 @@ const BottomTab = () => {
 export default BottomTab;
 
 const styles = StyleSheet.create({
+  tabBar: {
+    flexDirection: 'row',
+  },
   button: {
     flex: 1,
     justifyContent: 'center',
