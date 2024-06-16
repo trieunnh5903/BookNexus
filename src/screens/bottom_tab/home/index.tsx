@@ -9,9 +9,9 @@ import { Avatar } from 'react-native-paper';
 const HomeScreen = () => {
   const { colors } = useAppTheme();
   return (
-    <Container>
+    <Container style={styles.container}>
       <StatusBar backgroundColor={colors.black} />
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View className="flex-row justify-between">
         <View style={{ gap: 4 }}>
           <AppText fontSize={32} fontWeight={'bold'}>
             Good Afternoon
@@ -33,4 +33,8 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+  },
+});

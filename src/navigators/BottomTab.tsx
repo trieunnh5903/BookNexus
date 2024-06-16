@@ -77,7 +77,12 @@ const CustomTabBar = ({
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={styles.button}>
+            style={[
+              styles.button,
+              {
+                borderTopColor: colors.gray5,
+              },
+            ]}>
             {iconName === 'library-outline' ? (
               <Ionicons name={iconName} size={24} color={color} />
             ) : (
@@ -116,6 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    gap: 6,
+    borderTopWidth: 1,
+    gap: 4,
   },
 });

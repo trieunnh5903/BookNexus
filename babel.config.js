@@ -6,6 +6,7 @@ module.exports = {
     },
   },
   plugins: [
+    ['nativewind/babel'],
     [
       'module-resolver',
       {
