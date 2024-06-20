@@ -11,7 +11,7 @@ interface PaddingProps extends PropsWithChildren {
   paddingTop?: number;
   style?: StyleProp<ViewStyle>;
 }
-const Padding = ({
+const Padding: React.FC<PaddingProps> = ({
   children,
   padding,
   paddingBottom,
@@ -21,7 +21,7 @@ const Padding = ({
   paddingTop,
   paddingVertical,
   style,
-}: PaddingProps) => {
+}) => {
   return (
     <View
       style={[
