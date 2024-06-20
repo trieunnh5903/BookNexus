@@ -9,6 +9,7 @@ import { ExploreScreen, HomeScreen, LibraryScreen } from '@/screens';
 import { useAppTheme } from '@/hooks';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Feather, Ionicons } from '@/components/icons';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -83,6 +84,15 @@ const CustomTabBar = ({
                 borderTopColor: colors.gray5,
               },
             ]}>
+            {isFocused && (
+              <LinearGradient
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+                colors={['rgba(24,25,25, 0.7)', colors.black]}
+                style={[styles.linearGradient]}
+              />
+            )}
+
             {iconName === 'library-outline' ? (
               <Ionicons name={iconName} size={24} color={color} />
             ) : (
@@ -113,6 +123,13 @@ const BottomTab = () => {
 export default BottomTab;
 
 const styles = StyleSheet.create({
+  linearGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '100%',
+  },
   tabBar: {
     flexDirection: 'row',
   },

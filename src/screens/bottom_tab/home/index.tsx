@@ -1,12 +1,5 @@
-import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
-import React, {
-  Fragment,
-  memo,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Image, StatusBar, StyleSheet, View } from 'react-native';
+import React, { forwardRef, memo, useMemo, useRef, useState } from 'react';
 import { useAppTheme } from '@/hooks';
 import { Container, Padding } from '@/components';
 import { Path, Svg } from 'react-native-svg';
@@ -19,7 +12,7 @@ import {
   MaterialIcons,
 } from '@/components/icons';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/constants';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -32,7 +25,8 @@ import { images } from '@/assets';
 const HomeScreen = () => {
   const scrollY = useSharedValue(0);
   const { colors } = useAppTheme();
-  const scrollViewRef = useRef<Animated.ScrollView>(null);
+  const sectionListRef = useRef<FlatList>(null);
+  const sectionBarRef = useRef<FlatList>(null);
   const onScroll = useAnimatedScrollHandler({
     onScroll: event => {
       scrollY.value = event.contentOffset.y;
@@ -50,61 +44,73 @@ const HomeScreen = () => {
     };
   });
 
+  const onSectionBarPress = (index: number) => {
+    sectionListRef.current?.scrollToIndex({ index: index, viewPosition: 0.5 });
+    sectionBarRef.current?.scrollToIndex({ index: index, viewPosition: 0.5 });
+  };
+
   return (
     <Container>
       <StatusBar backgroundColor={colors.black} />
-      <Animated.ScrollView
-        ref={scrollViewRef}
-        onScroll={onScroll}
-        contentContainerStyle={styles.container}>
-        <View className="flex-row justify-between">
-          <View style={{ gap: 4 }}>
-            <AppText fontSize={32} fontWeight={'bold'}>
-              Good Afternoon
-            </AppText>
-            <Svg width={68} height={5} viewBox="0 0 68 5" fill="none">
-              <Path
-                d="M1 1C1 1 25.411 7.75 67 1"
-                stroke={colors.primary}
-                strokeWidth={2}
-                strokeLinecap="round"
+      <Animated.FlatList
+        ListHeaderComponent={
+          <>
+            <View className="flex-row justify-between">
+              <View style={{ gap: 4 }}>
+                <AppText fontSize={32} fontWeight={'bold'}>
+                  Good Afternoon
+                </AppText>
+                <Svg width={68} height={5} viewBox="0 0 68 5" fill="none">
+                  <Path
+                    d="M1 1C1 1 25.411 7.75 67 1"
+                    stroke={colors.primary}
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                  />
+                </Svg>
+              </View>
+              <Avatar.Image
+                size={48}
+                source={{ uri: 'https://picsum.photos/300' }}
               />
-            </Svg>
-          </View>
-          <Avatar.Image
-            size={48}
-            source={{ uri: 'https://picsum.photos/300' }}
-          />
-        </View>
-        <Image
-          source={images.advertisement}
-          style={styles.advertisement}
-          resizeMode="cover"
-        />
-        <Padding padding={16} />
-        {/* {SECTION.map((item, index) => {
-          return (
-            <Fragment key={'section' + index}>
-              <Section item={item} />
-              <Padding padding={12} />
-            </Fragment>
-          );
-        })} */}
-        {/* <View style={{ height: SCREEN_HEIGHT }} /> */}
-      </Animated.ScrollView>
+            </View>
+            <Image
+              source={images.advertisement}
+              style={styles.advertisement}
+              resizeMode="cover"
+            />
+            <Padding padding={16} />
+          </>
+        }
+        contentContainerStyle={styles.container}
+        onScroll={onScroll}
+        ref={sectionListRef}
+        ItemSeparatorComponent={() => <Padding padding={12} />}
+        data={SECTION}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => {
+          return <Section item={item} />;
+        }}
+      />
       <Animated.View
         style={[
           styles.sectionBar,
           { backgroundColor: colors.black },
           sectionBarStyle,
         ]}>
-        <SectionBar />
+        <SectionBar ref={sectionBarRef} onSectionBarPress={onSectionBarPress} />
       </Animated.View>
     </Container>
   );
 };
 
-const SECTION = [
+type Section = {
+  id: string;
+  label: string;
+  icon: React.JSX.Element;
+  data: Book[];
+};
+const SECTION: Section[] = [
   {
     id: 'sectionLabel1',
     label: 'Trending',
@@ -381,7 +387,9 @@ const SECTION = [
 const Section = ({ item: sectionItem }: { item: (typeof SECTION)[0] }) => {
   const { colors } = useAppTheme();
   return (
-    <View className="gap-[16]">
+    <View
+      onLayout={e => console.log(e.nativeEvent.layout)}
+      className="gap-[16]">
       <View className="flex-row justify-between items-center">
         <AppText fontSize={20} fontWeight={'bold'}>
           {sectionItem.label}
@@ -419,6 +427,7 @@ type Book = {
   minsRead: number;
   minsListen: number;
 };
+
 const BookHomeVertical = memo(({ item }: { item: Book }) => {
   const { colors } = useAppTheme();
   return (
@@ -463,8 +472,11 @@ const BookHomeVertical = memo(({ item }: { item: Book }) => {
   );
 });
 
-const SectionBar = () => {
-  const [selectedSection, setSelectedSection] = useState<string>();
+const SectionBar = forwardRef<
+  FlatList,
+  { onSectionBarPress: (index: number) => void }
+>(({ onSectionBarPress }, ref) => {
+  const [selectedSection, setSelectedSection] = useState<number>(0);
   const { colors } = useAppTheme();
   const sectionBar = useMemo(
     () => [
@@ -474,7 +486,7 @@ const SectionBar = () => {
         icon: (
           <MaterialIcons
             name="local-fire-department"
-            color={selectedSection === 'Trending' ? colors.black : colors.white}
+            color={selectedSection === 0 ? colors.black : colors.white}
             size={24}
           />
         ),
@@ -567,9 +579,7 @@ const SectionBar = () => {
         icon: (
           <MaterialCommunityIcons
             name="notebook-outline"
-            color={
-              selectedSection === '5-Minutes Read' ? colors.black : colors.white
-            }
+            color={selectedSection === 1 ? colors.black : colors.white}
             size={24}
           />
         ),
@@ -662,9 +672,7 @@ const SectionBar = () => {
         icon: (
           <MaterialCommunityIcons
             name="headphones"
-            color={
-              selectedSection === 'Quick Listen' ? colors.black : colors.white
-            }
+            color={selectedSection === 2 ? colors.black : colors.white}
             size={24}
           />
         ),
@@ -755,28 +763,33 @@ const SectionBar = () => {
     [colors.black, colors.white, selectedSection],
   );
 
-  const onSectionBarPress = () => {};
+  const handleSectionBarPress = (index: number) => {
+    setSelectedSection(index);
+    onSectionBarPress(index);
+  };
   return (
-    <ScrollView
+    <FlatList
+      ref={ref}
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={[styles.sectionBarContainer]}>
-      {sectionBar.map((item, index) => {
+      contentContainerStyle={[styles.sectionBarContainer]}
+      data={sectionBar}
+      renderItem={({ item, index }) => {
         const marginRight = index === sectionBar.length - 1 && {
           marginRight: 16,
         };
         const selectedStyle = {
           backgroundColor:
-            item.label === selectedSection ? colors.primary : undefined,
+            index === selectedSection ? colors.primary : undefined,
           borderWidth: 1,
           borderColor: colors.gray4,
         };
 
         const textColor =
-          item.label === selectedSection ? colors.black : colors.white;
+          index === selectedSection ? colors.black : colors.white;
         return (
           <AppButtonIcon
-            onPress={onSectionBarPress}
+            onPress={() => handleSectionBarPress(index)}
             key={item.label}
             iconLeft={item.icon}
             label={item.label}
@@ -784,10 +797,10 @@ const SectionBar = () => {
             textColor={textColor}
           />
         );
-      })}
-    </ScrollView>
+      }}
+    />
   );
-};
+});
 
 export default HomeScreen;
 
