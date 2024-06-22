@@ -1,10 +1,10 @@
-import { MD2LightTheme, useTheme } from 'react-native-paper';
+import { MD2DarkTheme, useTheme } from 'react-native-paper';
 
 export const theme = {
-  ...MD2LightTheme,
+  ...MD2DarkTheme,
   roundness: 10,
   colors: {
-    ...MD2LightTheme.colors,
+    ...MD2DarkTheme.colors,
     primary: '#CDE7BE',
     bgBlue: '#2D3047',
     bgShade: '#232538',

@@ -7,12 +7,24 @@ import { AppText } from '@/components/text';
 import { Ionicons } from '@/components/icons';
 import { FlatList } from 'react-native-gesture-handler';
 import BookHomeVertical from './BookHomeVertical';
+import { useNavigation } from '@react-navigation/native';
+import { BottomTabScreenProp } from '@/navigators/type';
+import { Book } from '@/types';
 
 const SectionItem = ({ item: sectionItem }: { item: Section }) => {
+  const navigation = useNavigation<BottomTabScreenProp<'Home'>['navigation']>();
   const { colors } = useAppTheme();
   const ItemSeparator = useCallback(() => {
     return <Padding padding={8} />;
   }, []);
+
+  const onBookPress = useCallback(
+    (book: Book) => {
+      navigation.navigate('DetailBook', { bookId: book.id });
+    },
+    [navigation],
+  );
+
   return (
     <View className="gap-[16]">
       <View className="flex-row justify-between items-center">
@@ -37,7 +49,9 @@ const SectionItem = ({ item: sectionItem }: { item: Section }) => {
         data={sectionItem.data}
         keyExtractor={item => item.id}
         renderItem={({ item }) => {
-          return <BookHomeVertical item={item} />;
+          return (
+            <BookHomeVertical onPress={() => onBookPress(item)} item={item} />
+          );
         }}
       />
     </View>

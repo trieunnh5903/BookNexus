@@ -1,10 +1,3 @@
-export type Section = {
-  id: string;
-  label: string;
-  icon: React.JSX.Element;
-  data: Book[];
-};
-
 export type Book = {
   id: string;
   image: string;
@@ -12,4 +5,6 @@ export type Book = {
   author: string;
   minsRead: number;
   minsListen: number;
+  description?: string;
+  chapters?: [];
 };

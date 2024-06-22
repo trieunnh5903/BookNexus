@@ -2,16 +2,12 @@ import {
   Image,
   StatusBar,
   StyleSheet,
-  View,
   ViewToken,
   ViewabilityConfig,
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/hooks';
 import { Container, Padding } from '@/components';
-import { Path, Svg } from 'react-native-svg';
-import { AppText } from '@/components/text';
-import { Avatar } from 'react-native-paper';
 import { MaterialCommunityIcons, MaterialIcons } from '@/components/icons';
 import { SCREEN_HEIGHT } from '@/constants';
 import { FlatList } from 'react-native-gesture-handler';
@@ -26,6 +22,7 @@ import { images } from '@/assets';
 import { Section } from './type';
 import SectionItem from './SectionItem';
 import SectionBar from './SectionBar';
+import Header from './Header';
 
 const HomeScreen = () => {
   const scrollY = useSharedValue(0);
@@ -101,25 +98,7 @@ const HomeScreen = () => {
       <Animated.FlatList
         ListHeaderComponent={
           <>
-            <View className="flex-row justify-between">
-              <View style={{ gap: 4 }}>
-                <AppText fontSize={32} fontWeight={'bold'}>
-                  Good Afternoon
-                </AppText>
-                <Svg width={68} height={5} viewBox="0 0 68 5" fill="none">
-                  <Path
-                    d="M1 1C1 1 25.411 7.75 67 1"
-                    stroke={colors.primary}
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                  />
-                </Svg>
-              </View>
-              <Avatar.Image
-                size={48}
-                source={{ uri: 'https://picsum.photos/300' }}
-              />
-            </View>
+            <Header />
             <Image
               source={images.advertisement}
               style={styles.advertisement}
