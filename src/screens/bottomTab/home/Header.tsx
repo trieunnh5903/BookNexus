@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 import { AppText } from '@/components/text';
 import { Path, Svg } from 'react-native-svg';
 import { useAppTheme } from '@/hooks';
@@ -41,4 +41,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);

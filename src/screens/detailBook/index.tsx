@@ -8,6 +8,8 @@ import { AppText } from '@/components/text';
 const DetailBook = ({ route }: RootStackScreenProps<'DetailBook'>) => {
   const { bookId } = route.params;
   const { detailBook } = useAppSelector(state => state.book);
+  console.log(detailBook);
+
   return (
     <Container>
       <AppText>DetailBook</AppText>

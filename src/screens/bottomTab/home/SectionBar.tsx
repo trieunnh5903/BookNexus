@@ -1,5 +1,11 @@
 import { StyleSheet } from 'react-native';
-import React, { forwardRef, useMemo } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { useAppTheme } from '@/hooks';
 import { AppButtonIcon } from '@/components/button';
@@ -9,9 +15,33 @@ interface SectionBarProps {
   onSectionBarPress: (index: number) => void;
   selectedSection: number;
 }
-const SectionBar = forwardRef<FlatList, SectionBarProps>(
+
+export type SectionBarHandle = {
+  scrollToIndex: (index: number) => void;
+};
+
+const SectionBar = forwardRef<SectionBarHandle, SectionBarProps>(
   ({ onSectionBarPress, selectedSection }, ref) => {
+    console.log('sectiombar');
+
     const { colors } = useAppTheme();
+    const flatListRef = useRef<FlatList>(null);
+
+    useImperativeHandle(ref, () => ({
+      scrollToIndex: index => {
+        if (flatListRef.current) {
+          flatListRef.current.scrollToIndex({ animated: true, index });
+        }
+      },
+    }));
+
+    useEffect(() => {
+      flatListRef.current?.scrollToIndex({
+        animated: true,
+        index: selectedSection,
+      });
+    }, [selectedSection]);
+
     const sectionBar = useMemo(
       () => [
         {
@@ -299,7 +329,7 @@ const SectionBar = forwardRef<FlatList, SectionBarProps>(
 
     return (
       <FlatList
-        ref={ref}
+        ref={flatListRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={[styles.sectionBarContainer]}

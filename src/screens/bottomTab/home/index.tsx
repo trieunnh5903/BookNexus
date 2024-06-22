@@ -126,7 +126,6 @@ const HomeScreen = () => {
           sectionBarStyle,
         ]}>
         <SectionBar
-          ref={sectionBarRef}
           onSectionBarPress={onSectionBarPress}
           selectedSection={debouncedSection}
         />
