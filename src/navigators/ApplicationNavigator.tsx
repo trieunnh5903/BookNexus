@@ -6,7 +6,7 @@ import {
   createStackNavigator,
 } from '@react-navigation/stack';
 import { RootStackParamList } from './type';
-import { DetailBookScreen, LoginScreen } from '@/screens';
+import { LoginScreen } from '@/screens';
 import { StyleSheet, View } from 'react-native';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -21,7 +21,7 @@ const ApplicationNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        ...TransitionPresets.FadeFromBottomAndroid,
+        ...TransitionPresets.ModalFadeTransition,
         cardOverlayEnabled: true,
         cardOverlay: cardOverlay,
       }}>
@@ -32,7 +32,6 @@ const ApplicationNavigator = () => {
       ) : (
         <>
           <Stack.Screen component={BottomTab} name="BottomTab" />
-          <Stack.Screen component={DetailBookScreen} name="DetailBook" />
         </>
       )}
     </Stack.Navigator>

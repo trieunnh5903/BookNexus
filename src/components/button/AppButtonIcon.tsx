@@ -17,6 +17,7 @@ interface AppButtonIconProps {
   iconLeft?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   textColor?: ColorValue;
+  backgroundColor?: ColorValue;
 }
 const AppButtonIcon = ({
   iconLeft,
@@ -25,12 +26,17 @@ const AppButtonIcon = ({
   textSize,
   textColor,
   style,
+  backgroundColor,
 }: AppButtonIconProps) => {
   const { colors } = useAppTheme();
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      style={[styles.continueButton, { backgroundColor: colors.white }, style]}
+      style={[
+        styles.continueButton,
+        { backgroundColor: backgroundColor || colors.white },
+        style,
+      ]}
       onPress={onPress}>
       <View style={styles.iconLeft}>{iconLeft}</View>
       <Text
@@ -49,8 +55,8 @@ export default AppButtonIcon;
 
 const styles = StyleSheet.create({
   iconLeft: {
-    position: 'absolute',
-    left: 16,
+    // position: 'absolute',
+    // left: 16,
   },
   continueButtonText: {
     fontSize: 16,
@@ -62,5 +68,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 6,
   },
 });

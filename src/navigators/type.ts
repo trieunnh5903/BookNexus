@@ -6,9 +6,14 @@ import {
 import { StackScreenProps } from '@react-navigation/stack';
 
 export type BottomTabParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<HomeStackParamList>;
   Explore: undefined;
   Library: undefined;
+};
+
+export type HomeStackParamList = {
+  HomeScreen: undefined;
+  DetailBook: { bookId: string };
 };
 
 export type RootStackParamList = {
@@ -19,8 +24,10 @@ export type RootStackParamList = {
   Signup: undefined;
   SelectGenres: undefined;
   BottomTab: NavigatorScreenParams<BottomTabParamList>;
-  DetailBook: { bookId: string };
 };
+
+export type HomeStackScreenProps<T extends keyof HomeStackParamList> =
+  StackScreenProps<HomeStackParamList, T>;
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
   StackScreenProps<RootStackParamList, T>;

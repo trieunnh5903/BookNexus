@@ -6,5 +6,6 @@ export type Book = {
   minsRead: number;
   minsListen: number;
   description?: string;
-  chapters?: [];
+  genre?: { id: string; name: string }[];
+  chapters?: { id: string; title: string; subtitle?: string }[];
 };

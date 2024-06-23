@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/hooks';
-import { Container, Padding } from '@/components';
+import { Container, Padding, SectionItem } from '@/components';
 import { MaterialCommunityIcons, MaterialIcons } from '@/components/icons';
 import { SCREEN_HEIGHT } from '@/constants';
 import { FlatList } from 'react-native-gesture-handler';
@@ -20,25 +20,22 @@ import Animated, {
 } from 'react-native-reanimated';
 import { images } from '@/assets';
 import { Section } from './type';
-import SectionItem from './SectionItem';
 import SectionBar from './SectionBar';
 import Header from './Header';
+import { Book } from '@/types';
+import { HomeStackScreenProps } from '@/navigators/type';
 
-const HomeScreen = () => {
+const SECTION_BAR_HEIGHT = 90;
+const HomeScreen = ({ navigation }: HomeStackScreenProps<'HomeScreen'>) => {
   const scrollY = useSharedValue(0);
   const { colors } = useAppTheme();
   const sectionListRef = useRef<FlatList>(null);
-  const sectionBarRef = useRef<FlatList>(null);
   const [selectedSection, setSelectedSection] = useState<number>(0);
   const [debouncedSection, setDebouncedSection] = useState(0);
 
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSection(selectedSection);
-      sectionBarRef.current?.scrollToIndex({
-        index: selectedSection,
-        viewPosition: 0.5,
-      });
     }, 1);
 
     return () => {
@@ -56,8 +53,8 @@ const HomeScreen = () => {
   const sectionBarStyle = useAnimatedStyle(() => {
     const translateY = interpolate(
       scrollY.value,
-      [0, 75],
-      [0, -75],
+      [0, 76],
+      [0, -70],
       Extrapolation.CLAMP,
     );
     return {
@@ -68,8 +65,6 @@ const HomeScreen = () => {
   const onSectionBarPress = useCallback((index: number) => {
     sectionListRef.current?.scrollToIndex({ index: index, viewPosition: 0.5 });
   }, []);
-
-  console.log('selectedSection', selectedSection);
 
   const onViewableItemsChanged = useRef(
     (info: {
@@ -92,6 +87,13 @@ const HomeScreen = () => {
     return <Padding padding={12} />;
   }, []);
 
+  const onBookPress = useCallback(
+    (book: Book) => {
+      navigation.navigate('DetailBook', { bookId: book.id });
+    },
+    [navigation],
+  );
+
   return (
     <Container>
       <StatusBar backgroundColor={colors.black} />
@@ -104,7 +106,7 @@ const HomeScreen = () => {
               style={styles.advertisement}
               resizeMode="cover"
             />
-            <Padding padding={16} />
+            <Padding padding={14} />
           </>
         }
         contentContainerStyle={styles.container}
@@ -116,7 +118,7 @@ const HomeScreen = () => {
         viewabilityConfig={viewabilityConfig.current}
         keyExtractor={item => item.id}
         renderItem={({ item }) => {
-          return <SectionItem item={item} />;
+          return <SectionItem item={item} onBookPress={onBookPress} />;
         }}
       />
       <Animated.View
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
   advertisement: {
     height: SCREEN_HEIGHT * 0.25,
     width: 'auto',
-    marginTop: 82,
+    marginTop: SECTION_BAR_HEIGHT,
     borderRadius: 10,
   },
   sectionBar: {
@@ -148,8 +150,9 @@ const styles = StyleSheet.create({
     top: 70,
     paddingVertical: 10,
     paddingTop: 15,
-    left: 16,
+    left: 0,
     right: 0,
+    paddingLeft: 16,
   },
 
   sectionBarButton: {

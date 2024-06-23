@@ -22,8 +22,6 @@ export type SectionBarHandle = {
 
 const SectionBar = forwardRef<SectionBarHandle, SectionBarProps>(
   ({ onSectionBarPress, selectedSection }, ref) => {
-    console.log('sectiombar');
-
     const { colors } = useAppTheme();
     const flatListRef = useRef<FlatList>(null);
 
@@ -369,6 +367,5 @@ const styles = StyleSheet.create({
   sectionBarContainer: { gap: 4 },
   sectionBarButton: {
     borderRadius: 20,
-    paddingLeft: 44,
   },
 });

@@ -1,29 +1,23 @@
 import { View } from 'react-native';
 import React, { memo, useCallback } from 'react';
-import { Section } from './type';
+import { Section } from '../screens/bottomTab/home/type';
 import { useAppTheme } from '@/hooks';
 import { Padding } from '@/components';
 import { AppText } from '@/components/text';
 import { Ionicons } from '@/components/icons';
 import { FlatList } from 'react-native-gesture-handler';
-import BookHomeVertical from './BookHomeVertical';
-import { useNavigation } from '@react-navigation/native';
-import { BottomTabScreenProp } from '@/navigators/type';
+import BookHomeVertical from './book/BookHomeVertical';
 import { Book } from '@/types';
 
-const SectionItem = ({ item: sectionItem }: { item: Section }) => {
-  const navigation = useNavigation<BottomTabScreenProp<'Home'>['navigation']>();
+interface SectionItemProps {
+  item: Section;
+  onBookPress: (book: Book) => void;
+}
+const SectionItem = ({ item: sectionItem, onBookPress }: SectionItemProps) => {
   const { colors } = useAppTheme();
   const ItemSeparator = useCallback(() => {
     return <Padding padding={8} />;
   }, []);
-
-  const onBookPress = useCallback(
-    (book: Book) => {
-      navigation.navigate('DetailBook', { bookId: book.id });
-    },
-    [navigation],
-  );
 
   return (
     <View className="gap-[16]">

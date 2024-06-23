@@ -4,14 +4,24 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { BottomTabParamList } from './type';
-import { ExploreScreen, HomeScreen, LibraryScreen } from '@/screens';
+import { BottomTabParamList, HomeStackParamList } from './type';
+import {
+  DetailBookScreen,
+  ExploreScreen,
+  HomeScreen,
+  LibraryScreen,
+} from '@/screens';
 import { useAppTheme } from '@/hooks';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Feather, Ionicons } from '@/components/icons';
 import LinearGradient from 'react-native-linear-gradient';
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
+const Stack = createStackNavigator<HomeStackParamList>();
 
 const CustomTabBar = ({
   state,
@@ -113,16 +123,38 @@ const BottomTab = () => {
   );
   return (
     <Tab.Navigator screenOptions={screenOptions} tabBar={renderTabBar}>
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
       <Tab.Screen name="Library" component={LibraryScreen} />
     </Tab.Navigator>
   );
 };
 
+function HomeStack() {
+  const { colors } = useAppTheme();
+
+  const cardOverlay = useCallback(
+    () => <View style={[{ backgroundColor: colors.black }, styles.overlay]} />,
+    [colors.black],
+  );
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        ...TransitionPresets.ModalFadeTransition,
+        cardOverlayEnabled: true,
+        cardOverlay: cardOverlay,
+      }}>
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="DetailBook" component={DetailBookScreen} />
+    </Stack.Navigator>
+  );
+}
+
 export default BottomTab;
 
 const styles = StyleSheet.create({
+  overlay: { flex: 1 },
   linearGradient: {
     position: 'absolute',
     top: 0,
