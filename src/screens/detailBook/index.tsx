@@ -8,17 +8,42 @@ import { BlurView } from '@react-native-community/blur';
 import { AppButtonIcon } from '@/components/button';
 import { MaterialCommunityIcons, MaterialIcons } from '@/components/icons';
 import { Chip, IconButton } from 'react-native-paper';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import { Book } from '@/types';
+import Animated, {
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
+import { HomeStackScreenProps } from '@/navigators/type';
 
 const TITLE_SIZE = 20;
-const DetailBook = () => {
+const HEADER_HEIGHT = 60;
+const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
+  const offsetY = useSharedValue(0);
   const { detailBook: book } = useAppSelector(state => state.book);
   const { colors } = useAppTheme();
   const onSimilarBookPress = (_similarBook: Book) => {};
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: e => {
+      offsetY.value = e.contentOffset.y;
+    },
+  });
+
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        offsetY.value,
+        [SCREEN_HEIGHT * 0.4, SCREEN_HEIGHT * 0.5],
+        [0, 1],
+      ),
+    };
+  });
+
   return (
     <Container>
-      <ScrollView>
+      <Animated.ScrollView onScroll={onScroll}>
         <Image source={{ uri: book.image }} style={styles.imageBackground} />
         <BlurView
           style={styles.absolute}
@@ -97,7 +122,25 @@ const DetailBook = () => {
           <ListChapters />
           <SectionItem item={SimilarBook} onBookPress={onSimilarBookPress} />
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
+      <Animated.View
+        style={[
+          styles.header,
+          { backgroundColor: colors.black },
+          headerAnimatedStyle,
+        ]}>
+        <AppText fontSize={20} fontWeight={'bold'}>
+          {book.title}
+        </AppText>
+      </Animated.View>
+      <View style={styles.back}>
+        <IconButton
+          onPress={() => navigation.goBack()}
+          icon={'arrow-left'}
+          size={24}
+          containerColor={colors.black}
+        />
+      </View>
     </Container>
   );
 };
@@ -180,6 +223,20 @@ const BookDescription = () => {
 export default DetailBook;
 
 const styles = StyleSheet.create({
+  back: {
+    position: 'absolute',
+    height: HEADER_HEIGHT,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    height: HEADER_HEIGHT,
+    width: SCREEN_WIDTH,
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   divider: {
     borderWidth: 1,
     height: '60%',
@@ -193,6 +250,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     bottom: -30,
     paddingVertical: 6,
+    paddingHorizontal: 16,
   },
 
   imageBackground: {
