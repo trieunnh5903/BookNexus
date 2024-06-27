@@ -2,8 +2,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import { useAppTheme } from '@/hooks';
 import { TextInput } from 'react-native-gesture-handler';
-import { GoogleSvg } from '@/assets';
 import { AppButtonIcon, AppButtonText } from '@/components/button';
+import { GoogleSvg } from '@/assets/icons';
 
 interface LoginEmailProps {
   onNextPress: () => void;
@@ -41,7 +41,6 @@ const LoginEmail = ({ onNextPress }: LoginEmailProps) => {
       </View>
 
       <View>
-        {/* <AppButtonText label="" /> */}
         <AppButtonIcon
           label="Login with Google"
           iconLeft={<GoogleSvg width={24} height={24} />}

@@ -1,21 +1,34 @@
-import { ColorValue, StyleSheet, Text, TextProps, View } from 'react-native';
+import { ColorValue, Text, TextProps, TextStyle } from 'react-native';
 import React, { PropsWithChildren } from 'react';
+import { StyleProp } from 'react-native';
 
 interface AppTextProps extends TextProps, PropsWithChildren {
   color?: ColorValue;
   fontSize?: number;
   fontWeight?: 'bold' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+  style?: StyleProp<TextStyle>;
+  lineHeight?: number;
 }
 const AppText = ({
   color = '#fff',
   fontSize = 16,
   fontWeight,
   children,
+  lineHeight,
+  style,
   ...props
 }: AppTextProps) => {
   return (
     <Text
-      style={{ color: color, fontSize: fontSize, fontWeight: fontWeight }}
+      style={[
+        {
+          color: color,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          lineHeight: lineHeight,
+        },
+        style,
+      ]}
       {...props}>
       {children}
     </Text>
@@ -23,5 +36,3 @@ const AppText = ({
 };
 
 export default AppText;
-
-const styles = StyleSheet.create({});

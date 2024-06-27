@@ -19,20 +19,20 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { images } from '@/assets';
-import { Section } from './type';
 import SectionBar from './SectionBar';
 import Header from './Header';
-import { Book } from '@/types';
+import { Book, Section } from '@/types';
 import { HomeStackScreenProps } from '@/navigators/type';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const SECTION_BAR_HEIGHT = 90;
+const INITIAL_POSITION_SECTION_BAR = 94;
 const HomeScreen = ({ navigation }: HomeStackScreenProps<'HomeScreen'>) => {
+  const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const { colors } = useAppTheme();
   const sectionListRef = useRef<FlatList>(null);
   const [selectedSection, setSelectedSection] = useState<number>(0);
   const [debouncedSection, setDebouncedSection] = useState(0);
-
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSection(selectedSection);
@@ -54,7 +54,7 @@ const HomeScreen = ({ navigation }: HomeStackScreenProps<'HomeScreen'>) => {
     const translateY = interpolate(
       scrollY.value,
       [0, 76],
-      [0, -70],
+      [0, -INITIAL_POSITION_SECTION_BAR + insets.top],
       Extrapolation.CLAMP,
     );
     return {
@@ -93,10 +93,21 @@ const HomeScreen = ({ navigation }: HomeStackScreenProps<'HomeScreen'>) => {
     },
     [navigation],
   );
-
   return (
     <Container>
-      <StatusBar backgroundColor={colors.black} />
+      <StatusBar translucent backgroundColor={colors.black} />
+      <Animated.View
+        style={[
+          styles.sectionBar,
+          { backgroundColor: colors.black },
+          sectionBarStyle,
+        ]}>
+        <SectionBar
+          data={SECTION}
+          onSectionBarPress={onSectionBarPress}
+          selectedSection={debouncedSection}
+        />
+      </Animated.View>
       <Animated.FlatList
         ListHeaderComponent={
           <>
@@ -121,17 +132,6 @@ const HomeScreen = ({ navigation }: HomeStackScreenProps<'HomeScreen'>) => {
           return <SectionItem item={item} onBookPress={onBookPress} />;
         }}
       />
-      <Animated.View
-        style={[
-          styles.sectionBar,
-          { backgroundColor: colors.black },
-          sectionBarStyle,
-        ]}>
-        <SectionBar
-          onSectionBarPress={onSectionBarPress}
-          selectedSection={debouncedSection}
-        />
-      </Animated.View>
     </Container>
   );
 };
@@ -142,17 +142,18 @@ const styles = StyleSheet.create({
   advertisement: {
     height: SCREEN_HEIGHT * 0.25,
     width: 'auto',
-    marginTop: SECTION_BAR_HEIGHT,
+    marginTop: 90,
     borderRadius: 10,
   },
   sectionBar: {
     position: 'absolute',
-    top: 70,
-    paddingVertical: 10,
-    paddingTop: 15,
+    top: INITIAL_POSITION_SECTION_BAR,
     left: 0,
     right: 0,
+    paddingBottom: 10,
+    paddingTop: 15,
     paddingLeft: 16,
+    zIndex: 1,
   },
 
   sectionBarButton: {

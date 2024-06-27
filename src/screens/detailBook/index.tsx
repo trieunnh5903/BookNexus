@@ -1,14 +1,18 @@
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import React from 'react';
 import { useAppSelector, useAppTheme } from '@/hooks';
-import { Container, Padding, SectionItem } from '@/components';
+import { Container, SectionItem } from '@/components';
 import { AppText } from '@/components/text';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/constants';
-import { BlurView } from '@react-native-community/blur';
 import { AppButtonIcon } from '@/components/button';
 import { MaterialCommunityIcons, MaterialIcons } from '@/components/icons';
 import { Chip, IconButton } from 'react-native-paper';
-import { FlatList } from 'react-native-gesture-handler';
 import { Book } from '@/types';
 import Animated, {
   interpolate,
@@ -17,12 +21,21 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { HomeStackScreenProps } from '@/navigators/type';
+import BookDescription from './BookDescription';
+import ListChapters from './ListChapter';
+import NowPlaying from './NowPlaying';
+import { BlurView } from '@react-native-community/blur';
+import LinearGradient from 'react-native-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const TITLE_SIZE = 20;
+export const TITLE_SIZE = 20;
 const HEADER_HEIGHT = 60;
+const IMAGE_BG_HEIGHT = SCREEN_HEIGHT * 0.35;
+
 const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
+  const insets = useSafeAreaInsets();
   const offsetY = useSharedValue(0);
-  const { detailBook: book } = useAppSelector(state => state.book);
+  const { detailBook: book, nowPlaying } = useAppSelector(state => state.book);
   const { colors } = useAppTheme();
   const onSimilarBookPress = (_similarBook: Book) => {};
   const onScroll = useAnimatedScrollHandler({
@@ -44,13 +57,30 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
   return (
     <Container>
       <Animated.ScrollView onScroll={onScroll}>
-        <Image source={{ uri: book.image }} style={styles.imageBackground} />
-        <BlurView
-          style={styles.absolute}
-          blurType="dark"
-          blurAmount={4}
-          reducedTransparencyFallbackColor="white"
-        />
+        <ImageBackground
+          source={{ uri: book.image }}
+          blurRadius={4}
+          style={styles.imageBackground}>
+          <LinearGradient
+            colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,1)']}
+            style={{ height: 20, width: SCREEN_WIDTH }}
+          />
+        </ImageBackground>
+        {Platform.OS === 'android' && (
+          <View
+            style={[styles.imageBackground, styles.imageBackgroundOverlay]}
+          />
+        )}
+        {Platform.OS === 'ios' && (
+          <View style={[styles.blur]}>
+            <BlurView
+              style={StyleSheet.absoluteFill}
+              blurType="dark"
+              blurAmount={10}
+            />
+          </View>
+        )}
+
         <View style={[styles.imageBackground, styles.imageBookWrapper]}>
           <Image source={{ uri: book.image }} style={styles.book} />
           <View
@@ -74,14 +104,17 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
                 }
               />
             </View>
-            <View
-              style={[
-                {
-                  borderColor: colors.gray1,
-                },
-                styles.divider,
-              ]}
-            />
+            <View className="flex-1 justify-center">
+              <View
+                style={[
+                  {
+                    borderColor: colors.gray1,
+                  },
+                  styles.divider,
+                ]}
+              />
+            </View>
+
             <View>
               <AppButtonIcon
                 label="Listen Now"
@@ -100,10 +133,10 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
         </View>
         <View className="p-[16] mt-[32]" style={{ gap: 24 }}>
           <View>
-            <AppText fontWeight={'bold'} fontSize={32}>
+            <AppText fontWeight={'bold'} fontSize={TITLE_SIZE + 2}>
               {book.title}
             </AppText>
-            <AppText fontWeight={'bold'} fontSize={TITLE_SIZE}>
+            <AppText fontWeight={'bold'} fontSize={16}>
               {book.author}
             </AppText>
           </View>
@@ -126,14 +159,14 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
       <Animated.View
         style={[
           styles.header,
-          { backgroundColor: colors.black },
+          { top: insets.top, backgroundColor: colors.black },
           headerAnimatedStyle,
         ]}>
         <AppText fontSize={20} fontWeight={'bold'}>
           {book.title}
         </AppText>
       </Animated.View>
-      <View style={styles.back}>
+      <View style={[styles.back, { top: insets.top }]}>
         <IconButton
           onPress={() => navigation.goBack()}
           icon={'arrow-left'}
@@ -141,88 +174,26 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
           containerColor={colors.black}
         />
       </View>
+      {nowPlaying && <NowPlaying />}
     </Container>
-  );
-};
-
-const ListChapters = () => {
-  const { detailBook: book } = useAppSelector(state => state.book);
-  const { colors } = useAppTheme();
-  const ItemSeprator = React.useCallback(() => <Padding padding={5} />, []);
-
-  return (
-    <View>
-      <AppText fontSize={TITLE_SIZE} fontWeight={'bold'}>{`${
-        book.chapters?.length || 0
-      } Chapters`}</AppText>
-      <FlatList
-        className="mt-[16]"
-        data={book.chapters}
-        scrollEnabled={false}
-        ItemSeparatorComponent={ItemSeprator}
-        keyExtractor={item => item.id}
-        renderItem={({ item, index }) => {
-          return (
-            <View className="flex-1 flex-row">
-              <AppText>{index < 10 ? `0${index + 1}` : index + 1}</AppText>
-              <View className="ml-[8] flex-1">
-                <AppText fontWeight={'bold'}>{item.title}</AppText>
-                <AppText>{item.subtitle}</AppText>
-              </View>
-              <View className="flex-row items-center">
-                <IconButton
-                  icon="glasses"
-                  iconColor={colors.white}
-                  containerColor={colors.bgShade}
-                  size={24}
-                  onPress={() => console.log('Pressed')}
-                />
-                <IconButton
-                  icon="headphones"
-                  iconColor={colors.white}
-                  containerColor={colors.bgShade}
-                  size={24}
-                  onPress={() => console.log('Pressed')}
-                />
-              </View>
-            </View>
-          );
-        }}
-      />
-    </View>
-  );
-};
-
-const BookDescription = () => {
-  const { detailBook: book } = useAppSelector(state => state.book);
-  const { colors } = useAppTheme();
-  const [isExpanded, setIsExpanded] = React.useState(false);
-
-  const toggleIsExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
-  return (
-    <View>
-      <AppText fontWeight={'bold'} fontSize={TITLE_SIZE}>
-        About this Book
-      </AppText>
-      <View className="mt-[4]">
-        <AppText numberOfLines={isExpanded ? undefined : 4}>
-          {book.description}
-        </AppText>
-        <Pressable onPress={toggleIsExpanded}>
-          <AppText color={colors.primary}>
-            {isExpanded ? 'Read Less' : 'Read More'}
-          </AppText>
-        </Pressable>
-      </View>
-    </View>
   );
 };
 
 export default DetailBook;
 
 const styles = StyleSheet.create({
+  blur: {
+    position: 'absolute',
+    width: '100%',
+    height: IMAGE_BG_HEIGHT + 40,
+    top: 0,
+  },
+  imageBackgroundOverlay: {
+    position: 'absolute',
+    backgroundColor: 'black',
+    opacity: 0.4,
+    flexDirection: 'row',
+  },
   back: {
     position: 'absolute',
     height: HEADER_HEIGHT,
@@ -241,7 +212,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: '60%',
     alignSelf: 'center',
-    marginHorizontal: 20,
+    // marginHorizontal: 20,
   },
   chip: { borderRadius: 8 },
   readBook: {
@@ -251,15 +222,14 @@ const styles = StyleSheet.create({
     bottom: -30,
     paddingVertical: 6,
     paddingHorizontal: 16,
+    left: 16,
+    right: 16,
   },
 
   imageBackground: {
-    // position: 'absolute',
-    // top: 0,
-    // left: 0,
-    // right: 0,
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * 0.35,
+    height: IMAGE_BG_HEIGHT,
+    justifyContent: 'flex-end',
   },
   imageBookWrapper: {
     alignItems: 'center',

@@ -24,10 +24,15 @@ export type RootStackParamList = {
   Signup: undefined;
   SelectGenres: undefined;
   BottomTab: NavigatorScreenParams<BottomTabParamList>;
+  AudioPlayer: undefined;
 };
 
 export type HomeStackScreenProps<T extends keyof HomeStackParamList> =
-  StackScreenProps<HomeStackParamList, T>;
+  // StackScreenProps<HomeStackParamList, T>;
+  CompositeScreenProps<
+    StackScreenProps<HomeStackParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
   StackScreenProps<RootStackParamList, T>;

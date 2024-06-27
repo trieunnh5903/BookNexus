@@ -8,6 +8,7 @@ import {
 import { RootStackParamList } from './type';
 import { LoginScreen } from '@/screens';
 import { StyleSheet, View } from 'react-native';
+import AudioPlayer from '@/screens/audioPlayer';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const ApplicationNavigator = () => {
@@ -32,6 +33,16 @@ const ApplicationNavigator = () => {
       ) : (
         <>
           <Stack.Screen component={BottomTab} name="BottomTab" />
+          <Stack.Screen
+            component={AudioPlayer}
+            name="AudioPlayer"
+            options={{
+              ...TransitionPresets.ModalSlideFromBottomIOS,
+              gestureEnabled: true,
+              gestureDirection: 'vertical',
+              cardOverlayEnabled: false,
+            }}
+          />
         </>
       )}
     </Stack.Navigator>

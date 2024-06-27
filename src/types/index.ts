@@ -7,5 +7,20 @@ export type Book = {
   minsListen: number;
   description?: string;
   genre?: { id: string; name: string }[];
-  chapters?: { id: string; title: string; subtitle?: string }[];
+  chapters?: Chapter[];
+};
+
+export type Chapter = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  audio?: string;
+  data?: string;
+};
+
+export type Section = {
+  id: string;
+  label: string;
+  icon: React.JSX.Element;
+  data: Book[];
 };
