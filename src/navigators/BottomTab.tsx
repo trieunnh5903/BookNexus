@@ -98,7 +98,7 @@ const CustomTabBar = ({
               <LinearGradient
                 start={{ x: 0, y: 0 }}
                 end={{ x: 0, y: 1 }}
-                colors={['rgba(24,25,25, 0.7)', colors.black]}
+                colors={['#1C211E', colors.black]}
                 style={[styles.linearGradient]}
               />
             )}
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: '100%',
+    bottom: 0,
   },
   tabBar: {
     flexDirection: 'row',

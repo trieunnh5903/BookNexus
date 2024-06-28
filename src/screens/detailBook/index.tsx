@@ -63,7 +63,7 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
           style={styles.imageBackground}>
           <LinearGradient
             colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,1)']}
-            style={{ height: 20, width: SCREEN_WIDTH }}
+            style={styles.linearGradient}
           />
         </ImageBackground>
         {Platform.OS === 'android' && (
@@ -182,6 +182,7 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
 export default DetailBook;
 
 const styles = StyleSheet.create({
+  linearGradient: { height: 20, width: SCREEN_WIDTH },
   blur: {
     position: 'absolute',
     width: '100%',
