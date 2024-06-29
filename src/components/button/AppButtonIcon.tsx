@@ -1,74 +1,42 @@
-import {
-  ColorValue,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import React from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useAppTheme } from '@/hooks';
+import { ColorValue } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 interface AppButtonIconProps {
   onPress?: () => void;
-  label: string;
-  textSize?: number;
-  iconLeft?: React.ReactNode;
+  icon?: React.JSX.Element;
   style?: StyleProp<ViewStyle>;
-  textColor?: ColorValue;
   backgroundColor?: ColorValue;
 }
 const AppButtonIcon = ({
-  iconLeft,
-  label,
+  icon,
   onPress,
-  textSize,
-  textColor,
-  style,
   backgroundColor,
+  style,
 }: AppButtonIconProps) => {
-  const { colors } = useAppTheme();
   return (
     <TouchableOpacity
       activeOpacity={0.5}
       style={[
-        styles.continueButton,
-        { backgroundColor: backgroundColor || colors.white },
+        styles.button,
+        {
+          backgroundColor: backgroundColor,
+        },
         style,
       ]}
       onPress={onPress}>
-      <View style={styles.iconLeft}>{iconLeft}</View>
-      <Text
-        style={[
-          styles.continueButtonText,
-          { color: textColor || colors.gray4 },
-          !!textSize && { fontSize: textSize },
-        ]}>
-        {label}
-      </Text>
+      {icon}
     </TouchableOpacity>
   );
 };
 
-export default AppButtonIcon;
-
 const styles = StyleSheet.create({
-  iconLeft: {
-    // position: 'absolute',
-    // left: 16,
-  },
-  continueButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  continueButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-    alignItems: 'center',
+  button: {
+    padding: 6,
+    borderRadius: 1000,
     justifyContent: 'center',
-    flexDirection: 'row',
-    gap: 6,
+    alignItems: 'center',
   },
 });
+export default AppButtonIcon;

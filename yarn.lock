@@ -2232,6 +2232,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ptomasroos/react-native-multi-slider@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@ptomasroos/react-native-multi-slider@npm:2.2.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/eb286b16aec36b92048b9e51f0c2198d6fc6c0011c531405e17a64d0fcd75062384622bc9f58d80ff5524b1d5ea4196b7a84054158b58ff968c6eb193b7e9f05
+  languageName: node
+  linkType: hard
+
 "@react-native-community/blur@npm:^4.4.0":
   version: 4.4.0
   resolution: "@react-native-community/blur@npm:4.4.0"
@@ -2420,6 +2430,13 @@ __metadata:
   bin:
     rnc-cli: build/bin.js
   checksum: 10c0/7f9dc8cc6929501fa791530a806c887c0daae1eeac5cf79b4336c1b7090b883e2dc67d0f6fedbde55e9ea246543fcc62006c2fafa97907754185fc991ab6bd00
+  languageName: node
+  linkType: hard
+
+"@react-native-community/slider@npm:^4.5.2":
+  version: 4.5.2
+  resolution: "@react-native-community/slider@npm:4.5.2"
+  checksum: 10c0/0aeef9ce4ccb1e8995e49efbe244edf68b4a6274845d8d4fefa07cf7b1bd2d3d43c6a7dc1e8a300fe18ae768c350dcd99d3c2ee88a74f854341d85c24140f80f
   languageName: node
   linkType: hard
 
@@ -3230,7 +3247,9 @@ __metadata:
     "@babel/core": "npm:^7.20.0"
     "@babel/preset-env": "npm:^7.20.0"
     "@babel/runtime": "npm:^7.20.0"
+    "@ptomasroos/react-native-multi-slider": "npm:^2.2.2"
     "@react-native-community/blur": "npm:^4.4.0"
+    "@react-native-community/slider": "npm:^4.5.2"
     "@react-native/babel-preset": "npm:0.74.84"
     "@react-native/eslint-config": "npm:0.74.84"
     "@react-native/metro-config": "npm:0.74.84"
@@ -3259,6 +3278,7 @@ __metadata:
     react-native-safe-area-context: "npm:^4.10.4"
     react-native-screens: "npm:^3.31.1"
     react-native-svg: "npm:^15.3.0"
+    react-native-track-player: "npm:^4.1.1"
     react-native-vector-icons: "npm:^10.1.0"
     react-redux: "npm:^9.1.2"
     react-test-renderer: "npm:18.2.0"
@@ -8900,6 +8920,23 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/72ac639de834d943c3a52f1ac1703e0858eefe59f32d8db4c7e4736e117afea8b88efe8eef9fd1051367d601076090e733fcb93e70df0ec8c6ff6df4859874af
+  languageName: node
+  linkType: hard
+
+"react-native-track-player@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "react-native-track-player@npm:4.1.1"
+  peerDependencies:
+    react: ">=16.8.6"
+    react-native: ">=0.60.0-rc.2"
+    react-native-windows: ">=0.63.0"
+    shaka-player: ^4.7.9
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+    shaka-player:
+      optional: true
+  checksum: 10c0/ffaaee7582603f4930e163d0fbe2d6e5c268470b92c86d8fd3bb42ca50fd72e49686c5ae897721ef3129d49579b508281cf4f3409fbd25ebc33f2dbb21a93c5a
   languageName: node
   linkType: hard
 

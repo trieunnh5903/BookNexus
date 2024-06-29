@@ -5,18 +5,19 @@ import { AppText } from '@/components/text';
 import { FlatList } from 'react-native-gesture-handler';
 import { useAppDispatch, useAppSelector, useAppTheme } from '@/hooks';
 import { Chapter } from '@/types';
-import { changeNowPlaying } from '@/redux/slices/bookSlice';
-import { IconButton } from 'react-native-paper';
 import { Play } from '@/assets/icons';
-import { TITLE_SIZE } from '.';
+import { TITLE_SIZE } from './constants';
+import { changeNowPlaying } from '@/redux/slices/audioPlayerSlice';
+import { MaterialCommunityIcons } from '@/components/icons';
+import { AppButtonIcon } from '@/components/button';
 
 const ListChapters = () => {
   const dispatch = useAppDispatch();
-  const { detailBook: book } = useAppSelector(state => state.book);
+  const { book } = useAppSelector(state => state.book);
   const { colors } = useAppTheme();
   const ItemSeprator = React.useCallback(() => <Padding padding={5} />, []);
   const handlePlayAudio = (chapter: Chapter) => {
-    dispatch(changeNowPlaying(chapter));
+    dispatch(changeNowPlaying({ chapter }));
   };
   return (
     <View>
@@ -40,19 +41,20 @@ const ListChapters = () => {
                 </AppText>
               </View>
               <View className="flex-row items-center">
-                <IconButton
-                  icon="glasses"
-                  iconColor={colors.white}
-                  containerColor={colors.bgShade}
-                  size={24}
+                <AppButtonIcon
+                  icon={
+                    <MaterialCommunityIcons
+                      name="glasses"
+                      color={colors.white}
+                      size={24}
+                    />
+                  }
+                  backgroundColor={colors.bgShade}
                 />
-                <IconButton
-                  icon={({ size, color }) => (
-                    <Play width={size} height={size} color={color} />
-                  )}
-                  iconColor={colors.white}
-                  containerColor={colors.bgShade}
-                  size={24}
+                <Padding padding={4} />
+                <AppButtonIcon
+                  icon={<Play width={24} height={24} color={colors.white} />}
+                  backgroundColor={colors.bgShade}
                   onPress={() => handlePlayAudio(item)}
                 />
               </View>

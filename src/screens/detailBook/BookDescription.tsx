@@ -3,10 +3,10 @@ import React from 'react';
 import { useAppSelector, useAppTheme } from '@/hooks';
 import { AppText } from '@/components/text';
 import { Pressable } from 'react-native';
-import { TITLE_SIZE } from '.';
+import { TITLE_SIZE } from './constants';
 
 const BookDescription = () => {
-  const { detailBook: book } = useAppSelector(state => state.book);
+  const { book } = useAppSelector(state => state.book);
   const { colors } = useAppTheme();
   const [isExpanded, setIsExpanded] = React.useState(false);
 

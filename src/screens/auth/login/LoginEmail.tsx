@@ -2,8 +2,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import { useAppTheme } from '@/hooks';
 import { TextInput } from 'react-native-gesture-handler';
-import { AppButtonIcon, AppButtonText } from '@/components/button';
+import { AppButtonText } from '@/components/button';
 import { GoogleSvg } from '@/assets/icons';
+import { AppText } from '@/components/text';
 
 interface LoginEmailProps {
   onNextPress: () => void;
@@ -41,17 +42,21 @@ const LoginEmail = ({ onNextPress }: LoginEmailProps) => {
       </View>
 
       <View>
-        <AppButtonIcon
+        <AppButtonText
           label="Login with Google"
-          iconLeft={<GoogleSvg width={24} height={24} />}
+          iconLeft={
+            <View style={styles.googleView}>
+              <GoogleSvg width={24} height={24} />
+            </View>
+          }
         />
       </View>
 
       <View style={styles.signUpContainer}>
         <Text style={styles.dontHaveAccount}>Don't have account?</Text>
-        <Text style={[{ color: colors.primary, fontSize: 16 }, fonts.medium]}>
+        <AppText color={colors.primary} fontWeight={'bold'}>
           Sign Up
-        </Text>
+        </AppText>
       </View>
     </View>
     // </BlurView>
@@ -61,6 +66,7 @@ const LoginEmail = ({ onNextPress }: LoginEmailProps) => {
 export default LoginEmail;
 
 const styles = StyleSheet.create({
+  googleView: { position: 'absolute', left: 16 },
   dontHaveAccount: { color: '#fff', fontSize: 16 },
   signUpContainer: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
   textOr: {

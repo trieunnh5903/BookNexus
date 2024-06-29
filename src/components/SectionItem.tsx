@@ -1,13 +1,12 @@
 import { View } from 'react-native';
 import React, { memo, useCallback } from 'react';
-import { Section } from '../screens/bottomTab/home/type';
 import { useAppTheme } from '@/hooks';
-import { Padding } from '@/components';
 import { AppText } from '@/components/text';
 import { Ionicons } from '@/components/icons';
 import { FlatList } from 'react-native-gesture-handler';
 import BookHomeVertical from './book/BookHomeVertical';
-import { Book } from '@/types';
+import { Book, Section } from '@/types';
+import Padding from './Padding';
 
 interface SectionItemProps {
   item: Section;

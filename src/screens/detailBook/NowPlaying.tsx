@@ -15,7 +15,8 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const NowPlaying = () => {
   const navigation =
     useNavigation<HomeStackScreenProps<'DetailBook'>['navigation']>();
-  const { detailBook: book, nowPlaying } = useAppSelector(state => state.book);
+  const { book } = useAppSelector(state => state.book);
+  const { nowPlaying } = useAppSelector(state => state.audioPlayer);
   const { colors } = useAppTheme();
   const handleNowPlayingPress = () => {
     navigation.navigate('AudioPlayer');

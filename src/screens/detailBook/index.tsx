@@ -10,9 +10,9 @@ import { useAppSelector, useAppTheme } from '@/hooks';
 import { Container, SectionItem } from '@/components';
 import { AppText } from '@/components/text';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/constants';
-import { AppButtonIcon } from '@/components/button';
+import { AppButtonText } from '@/components/button';
 import { MaterialCommunityIcons, MaterialIcons } from '@/components/icons';
-import { Chip, IconButton } from 'react-native-paper';
+import { Chip } from 'react-native-paper';
 import { Book } from '@/types';
 import Animated, {
   interpolate,
@@ -27,15 +27,13 @@ import NowPlaying from './NowPlaying';
 import { BlurView } from '@react-native-community/blur';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-export const TITLE_SIZE = 20;
-const HEADER_HEIGHT = 60;
-const IMAGE_BG_HEIGHT = SCREEN_HEIGHT * 0.35;
+import { HEADER_HEIGHT, IMAGE_BG_HEIGHT, TITLE_SIZE } from './constants';
 
 const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
   const insets = useSafeAreaInsets();
   const offsetY = useSharedValue(0);
-  const { detailBook: book, nowPlaying } = useAppSelector(state => state.book);
+  const { book } = useAppSelector(state => state.book);
+  const { nowPlaying } = useAppSelector(state => state.audioPlayer);
   const { colors } = useAppTheme();
   const onSimilarBookPress = (_similarBook: Book) => {};
   const onScroll = useAnimatedScrollHandler({
@@ -83,52 +81,34 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
 
         <View style={[styles.imageBackground, styles.imageBookWrapper]}>
           <Image source={{ uri: book.image }} style={styles.book} />
-          <View
-            style={[
-              styles.readBook,
-              {
-                backgroundColor: colors.bgShade,
-              },
-            ]}>
-            <View>
-              <AppButtonIcon
-                label="Read Now"
-                textColor={colors.white}
-                backgroundColor={'transparent'}
-                iconLeft={
-                  <MaterialCommunityIcons
-                    name="book-open-outline"
-                    size={24}
-                    color={colors.white}
-                  />
-                }
-              />
-            </View>
+          <View style={[styles.readBook, { backgroundColor: colors.bgShade }]}>
+            <AppButtonText
+              label="Read Now"
+              textColor={colors.white}
+              backgroundColor={'transparent'}
+              iconLeft={
+                <MaterialCommunityIcons
+                  name="book-open-outline"
+                  size={24}
+                  color={colors.white}
+                />
+              }
+            />
             <View className="flex-1 justify-center">
-              <View
-                style={[
-                  {
-                    borderColor: colors.gray1,
-                  },
-                  styles.divider,
-                ]}
-              />
+              <View style={[{ borderColor: colors.gray1 }, styles.divider]} />
             </View>
-
-            <View>
-              <AppButtonIcon
-                label="Listen Now"
-                textColor={colors.white}
-                backgroundColor={'transparent'}
-                iconLeft={
-                  <MaterialCommunityIcons
-                    name="headphones"
-                    size={24}
-                    color={colors.white}
-                  />
-                }
-              />
-            </View>
+            <AppButtonText
+              label="Listen Now"
+              textColor={colors.white}
+              backgroundColor={'transparent'}
+              iconLeft={
+                <MaterialCommunityIcons
+                  name="headphones"
+                  size={24}
+                  color={colors.white}
+                />
+              }
+            />
           </View>
         </View>
         <View className="p-[16] mt-[32]" style={{ gap: 24 }}>
@@ -167,11 +147,11 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
         </AppText>
       </Animated.View>
       <View style={[styles.back, { top: insets.top }]}>
-        <IconButton
+        <MaterialCommunityIcons
           onPress={() => navigation.goBack()}
-          icon={'arrow-left'}
+          name={'arrow-left'}
           size={24}
-          containerColor={colors.black}
+          color={colors.white}
         />
       </View>
       {nowPlaying && <NowPlaying />}
@@ -200,6 +180,7 @@ const styles = StyleSheet.create({
     height: HEADER_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
+    left: 10,
   },
   header: {
     height: HEADER_HEIGHT,

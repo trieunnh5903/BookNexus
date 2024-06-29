@@ -40,7 +40,7 @@ const ApplicationNavigator = () => {
               ...TransitionPresets.ModalSlideFromBottomIOS,
               gestureEnabled: true,
               gestureDirection: 'vertical',
-              cardOverlayEnabled: false,
+              cardOverlayEnabled: true,
             }}
           />
         </>

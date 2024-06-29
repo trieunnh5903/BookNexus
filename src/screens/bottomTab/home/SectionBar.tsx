@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { useAppTheme } from '@/hooks';
-import { AppButtonIcon } from '@/components/button';
+import { AppButtonText } from '@/components/button';
 import { Section } from '@/types';
 import { ColorValue } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -55,7 +55,7 @@ const SectionBar = ({
           index === selectedSection ? colors.black : colors.white;
 
         return (
-          <AppButtonIcon
+          <AppButtonText
             onPress={() => onSectionBarPress(index)}
             key={item.label}
             iconLeft={<ColoredIcon icon={item.icon} color={textColor} />}

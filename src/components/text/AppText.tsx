@@ -8,12 +8,14 @@ interface AppTextProps extends TextProps, PropsWithChildren {
   fontWeight?: 'bold' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
   style?: StyleProp<TextStyle>;
   lineHeight?: number;
+  letterSpacing?: number;
 }
 const AppText = ({
   color = '#fff',
   fontSize = 16,
   fontWeight,
   children,
+  letterSpacing,
   lineHeight,
   style,
   ...props
@@ -26,6 +28,7 @@ const AppText = ({
           fontSize: fontSize,
           fontWeight: fontWeight,
           lineHeight: lineHeight,
+          letterSpacing: letterSpacing,
         },
         style,
       ]}
