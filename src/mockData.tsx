@@ -47,16 +47,16 @@ export const mockBook: Book = {
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry ',
       data: mockChapter,
       audio:
-        'https://etc.usf.edu/lit2go/audio/mp3/the-crimson-fairy-book-001-the-boy-who-could-keep-a-secret.5121.mp3',
+        'https://ia600701.us.archive.org/12/items/frankenstein_cs_librivox/frankenstein_01_shelley_64kb.mp3',
     },
     {
       id: 'aafds',
-      title: 'Introducion',
+      title: 'Introducion 2',
       subtitle:
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry ',
       data: mockChapter,
       audio:
-        'https://etc.usf.edu/lit2go/audio/mp3/the-crimson-fairy-book-001-the-boy-who-could-keep-a-secret.5121.mp3',
+        'https://ia601300.us.archive.org/32/items/crowd_1602_librivox/crowd_02_lebon_64kb.mp3',
     },
   ],
 };

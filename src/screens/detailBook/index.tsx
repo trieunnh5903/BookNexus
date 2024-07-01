@@ -23,17 +23,22 @@ import Animated, {
 import { HomeStackScreenProps } from '@/navigators/type';
 import BookDescription from './BookDescription';
 import ListChapters from './ListChapter';
-import NowPlaying from './NowPlaying';
 import { BlurView } from '@react-native-community/blur';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HEADER_HEIGHT, IMAGE_BG_HEIGHT, TITLE_SIZE } from './constants';
+import {
+  Event,
+  useActiveTrack,
+  useTrackPlayerEvents,
+} from 'react-native-track-player';
 
 const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
+  const activeTrack = useActiveTrack();
   const insets = useSafeAreaInsets();
   const offsetY = useSharedValue(0);
   const { book } = useAppSelector(state => state.book);
-  const { nowPlaying } = useAppSelector(state => state.audioPlayer);
+  // const { nowPlaying } = useAppSelector(state => state.audioPlayer);
   const { colors } = useAppTheme();
   const onSimilarBookPress = (_similarBook: Book) => {};
   const onScroll = useAnimatedScrollHandler({
@@ -51,6 +56,23 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
       ),
     };
   });
+
+  const events = [Event.PlaybackState, Event.PlaybackError, Event.PlayerError];
+  useTrackPlayerEvents(events, event => {
+    if (event.type === Event.PlaybackState) {
+      console.log(event.state);
+    }
+
+    if (event.type === Event.PlaybackError) {
+      console.log('PlaybackError', event.message);
+    }
+
+    if (event.type === Event.PlayerError) {
+      console.log('PlayerError', event.message);
+    }
+  });
+  // console.log('playWhenReady', playWhenReady);
+  // console.log(track);
 
   return (
     <Container>
@@ -154,7 +176,6 @@ const DetailBook = ({ navigation }: HomeStackScreenProps<'DetailBook'>) => {
           color={colors.white}
         />
       </View>
-      {nowPlaying && <NowPlaying />}
     </Container>
   );
 };

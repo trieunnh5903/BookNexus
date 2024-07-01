@@ -19,6 +19,8 @@ import {
   createStackNavigator,
   TransitionPresets,
 } from '@react-navigation/stack';
+import { MediaPlayerHorizontal } from '@/components';
+import { useActiveTrack } from 'react-native-track-player';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 const Stack = createStackNavigator<HomeStackParamList>();
@@ -28,6 +30,7 @@ const CustomTabBar = ({
   descriptors,
   navigation,
 }: BottomTabBarProps) => {
+  const activeTrack = useActiveTrack();
   const { colors } = useAppTheme();
   return (
     <View
@@ -35,83 +38,85 @@ const CustomTabBar = ({
         {
           backgroundColor: colors.black,
         },
-        styles.tabBar,
       ]}>
-      {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
-        const isFocused = state.index === index;
-        let iconName;
+      {activeTrack && <MediaPlayerHorizontal />}
+      <View style={styles.tabBar}>
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const label =
+            options.tabBarLabel !== undefined
+              ? options.tabBarLabel
+              : options.title !== undefined
+              ? options.title
+              : route.name;
+          const isFocused = state.index === index;
+          let iconName;
 
-        switch (route.name) {
-          case 'Home':
-            iconName = 'home';
-            break;
-          case 'Library':
-            iconName = 'library-outline';
-            break;
-          default:
-            iconName = 'search';
-        }
-
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
-
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name, route.params);
+          switch (route.name) {
+            case 'Home':
+              iconName = 'home';
+              break;
+            case 'Library':
+              iconName = 'library-outline';
+              break;
+            default:
+              iconName = 'search';
           }
-        };
 
-        const onLongPress = () => {
-          navigation.emit({
-            type: 'tabLongPress',
-            target: route.key,
-          });
-        };
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-        const color = isFocused ? colors.primary : colors.gray1;
-        return (
-          <Pressable
-            key={label + iconName}
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            style={[
-              styles.button,
-              {
-                borderTopColor: colors.gray5,
-              },
-            ]}>
-            {isFocused && (
-              <LinearGradient
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-                colors={['#1C211E', colors.black]}
-                style={[styles.linearGradient]}
-              />
-            )}
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name, route.params);
+            }
+          };
 
-            {iconName === 'library-outline' ? (
-              <Ionicons name={iconName} size={24} color={color} />
-            ) : (
-              <Feather name={iconName} size={24} color={color} />
-            )}
-            <Text style={{ color: color }}>{label as string}</Text>
-          </Pressable>
-        );
-      })}
+          const onLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
+          };
+
+          const color = isFocused ? colors.primary : colors.gray1;
+          return (
+            <Pressable
+              key={label + iconName}
+              accessibilityRole="button"
+              accessibilityState={isFocused ? { selected: true } : {}}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              testID={options.tabBarTestID}
+              onPress={onPress}
+              onLongPress={onLongPress}
+              style={[
+                styles.button,
+                {
+                  borderTopColor: colors.gray5,
+                },
+              ]}>
+              {isFocused && (
+                <LinearGradient
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                  colors={['#1C211E', colors.black]}
+                  style={[styles.linearGradient]}
+                />
+              )}
+
+              {iconName === 'library-outline' ? (
+                <Ionicons name={iconName} size={24} color={color} />
+              ) : (
+                <Feather name={iconName} size={24} color={color} />
+              )}
+              <Text style={{ color: color }}>{label as string}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 };
